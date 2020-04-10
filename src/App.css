@@ -1,0 +1,162 @@
+.dropdown-toggle::after {
+  display: none;
+}
+
+.form-container{
+  background-color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.image-container{
+  background: url('./images/parking_2.jpg') center no-repeat;
+  background-size: cover;
+  height: 100vh; 
+}
+
+.login-carousel{
+  height: 100vh;
+}
+
+.form-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.form-box h4 {
+  font-weight: bold;
+}
+
+.form-box .form-input {
+  position: relative;
+}
+
+.form-box .form-input input{
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #FF5722;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 5px;
+  outline: none;
+  background: transparent;
+  padding-left: 45px;
+  color: #777;
+}
+
+.form-box .form-input span{
+  position: absolute;
+  top: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #777;
+  transition: 0.2s ease all;
+}
+
+.form-box .form-input span:focus,
+.form-box .form-input span:valid{
+  color: #FF5722;
+}
+
+.form-box .form-input input::placeholder{
+  padding-left: 0px;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  left: 30px;
+  top: 18px;
+  transition: 0.2s ease all;
+}
+
+input:focus ~ .floating-label,
+input:not(:focus):valid ~ .floating-label{
+  top: -20px;
+  bottom: -10px;
+  font-size: 14px;
+  left: 20px;
+  opacity: 1;
+  color: #FF5722;
+  
+}
+
+.form-box .form-input input:focus,
+.form-box .form-input input:valid{
+  border-bottom: 2px solid #FF5722;
+}
+
+.form-box input[type="checkbox"]:not(:checked)+ label:before{
+  background: transparent;
+  border: 2px solid #FF5722;
+  width: 15px;
+  height: 15px;
+}
+
+.form-box .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before{
+  background-color: #FF5722;
+  border: 0px;
+}
+
+.form-box button[type="submit"]{
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  background-color:#FF5722;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.5s;
+}
+
+.form-box button[type="submit"]:hover{
+  -webkit-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+  -moz-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+  box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+}
+
+.forget-link, .register-link{
+  font-weight:bold;
+}
+
+.forget-link:hover, .register-link:hover{
+}
+
+.form-box .btn-social{
+  color: #fff;
+  border: 0;
+  margin-bottom: 10px;
+}
+
+.form-box .btn-facebook{
+  background: #4866a8;
+}
+
+.form-box .btn-google{
+  background: #da3f34;
+}
+
+.form-box .btn-university{
+  background: #33ccff;
+}
+
+.form-box .btn-facebook:hover{
+  background: #3d5785;
+  color: #fff;
+}
+
+.form-box .btn-google:hover{
+  background: #bf3b31;
+  color: #fff;
+}
+
+.form-box .btn-university:hover{
+  background: #2eb7e5;
+  color: #fff;
+}
+
