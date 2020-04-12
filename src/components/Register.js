@@ -104,25 +104,26 @@ validate = () => {
 
 handleSubmit = (event) => {
     var hash = require('object-hash');
-    const { firstName, lastName, email, userName, password, confirmationPassword } = this.state;
+    const { firstName, lastName, email, userName, password, confirmPassword } = this.state;
     
     if (this.validate()){
     
-        axios.put('/api/auth/signup', {
+        axios.post('/auth/signup', {
             first_name: firstName,
             last_name: lastName,
             email: email,
             username: userName,
             password: hash(password, { algorithm: 'md5', encoding: 'base64' }),
-            password_confirmation: hash(confirmationPassword, { algorithm: 'md5', encoding: 'base64' })
+            password_confirmation: hash(confirmPassword, { algorithm: 'md5', encoding: 'base64' })
         })
         .then((response) => {
-            this.setState({successfulRegister: true})	// Set to true so we can redirect to login page
+            this.setState({successfulRegister: true})	// Set to true to redirect
         })
         .catch((error) => {
-
+            console.log("fail");
             
             if (!error.response) {
+                
                 return;
             }
             this.setState({
@@ -133,6 +134,7 @@ handleSubmit = (event) => {
         });
     }
 }
+
 
 handleFirstNameChange = (event) => {
     this.setState({ 
@@ -234,7 +236,7 @@ render() {
                 <Input
                     name="password"
                     className="text"
-                    type="text"
+                    type="password"
                     placeholder="Must be 5 characters minimum and only have alphanumeric, or @$.!%*#?&, symbols
                     and have at least one uppercase, one lowercase, and one symbol."
                     value={this.state.password}
@@ -248,7 +250,7 @@ render() {
                 <Input
                     name="confirmPassword"
                     className="text"
-                    type="text"
+                    type="password"
                     placeholder="Enter your password again"
                     value={this.state.confirmPassword}
                     onChange={this.handleConfirmPasswordChange}

@@ -36,7 +36,7 @@ export default class ResetPassword extends Component {
 
         if(this.validFormat()){
 
-            axios.post("/api/auth/reset", {
+            axios.post("/auth/reset", {
                 email: email,
             })
             .then(result => {
