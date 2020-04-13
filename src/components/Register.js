@@ -122,10 +122,6 @@ handleSubmit = (event) => {
         .catch((error) => {
             console.log("fail");
             
-            if (!error.response) {
-                
-                return;
-            }
             this.setState({
                 password:'',
                 confirmationPassword:''
