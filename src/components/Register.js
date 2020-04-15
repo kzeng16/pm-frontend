@@ -33,7 +33,7 @@ constructor(props) {
     }
 }
 
-validate = () => {
+validate = () => { // Checking valid strings for each input
 
     const { password, confirmPassword, email,userName, firstName, lastName } = this.state;
 
@@ -171,36 +171,39 @@ handleConfirmPasswordChange = (event) => {
 render() {
 
     if (this.state.successfulRegister) {
-        return <Redirect to="/login"/> // Maybe send to verify email page
+        return <Redirect to="/success"/> // Maybe send to verify email page
     }
 
     return (
-        <Form>
-            <FormGroup>
-            <Label>First Name</Label>
-                <Input
-                    name="firstName"
-                    className="text"
-                    type="text"
-                    placeholder="First Name"
-                    value={this.state.firstName}
-					onChange={this.handleFirstNameChange}
-                    invalid={this.state.isNameInvalid}
-                    />
-                <FormFeedback>{this.state.nameError}</FormFeedback>
-            </FormGroup>
-            <FormGroup>
-            <Label>Last Name</Label>
-                <Input
-                    name="lastName"
-                    className="text"
-                    type="text"
-                    placeholder="Last Name"
-                    value={this.state.lastName}
-					onChange={this.handleLastNameChange}
-                    invalid={this.state.isNameInvalid}
-                    />
-            </FormGroup>
+        <Form className="container-fluid col-lg-6 bg-light pb-3 pt-3 mt-5 rounded">
+            <h3 className="text-center pb-2 pt-2 font-weight-bold "> Register </h3>
+            <div className="row">
+                <FormGroup className="col-5">
+                <Label>First Name</Label>
+                    <Input
+                        name="firstName"
+                        className="text"
+                        type="text"
+                        placeholder="First Name"
+                        value={this.state.firstName}
+                        onChange={this.handleFirstNameChange}
+                        invalid={this.state.isNameInvalid}
+                        />
+                    <FormFeedback>{this.state.nameError}</FormFeedback>
+                </FormGroup>
+                <FormGroup className="col-5">
+                <Label>Last Name</Label>
+                    <Input
+                        name="lastName"
+                        className="text"
+                        type="text"
+                        placeholder="Last Name"
+                        value={this.state.lastName}
+                        onChange={this.handleLastNameChange}
+                        invalid={this.state.isNameInvalid}
+                        />
+                </FormGroup>
+            </div>
             <FormGroup>
             <Label>Username</Label>
                 <Input
@@ -233,8 +236,7 @@ render() {
                     name="password"
                     className="text"
                     type="password"
-                    placeholder="Must be 5 characters minimum and only have alphanumeric, or @$.!%*#?&, symbols
-                    and have at least one uppercase, one lowercase, and one symbol."
+                    placeholder="5 characters minimum, have at least one uppercase, one lowercase, and one symbol."
                     value={this.state.password}
 					onChange={this.handlePasswordChange}
                     invalid={this.state.isPasswordInvalid}
@@ -254,7 +256,7 @@ render() {
                 />
                 <FormFeedback>{this.state.passwordConfirmError}</FormFeedback>
             </FormGroup>
-            <Button onClick={this.handleSubmit}>
+            <Button className="btn-warning btn-lg btn-block rounded-pill"onClick={this.handleSubmit}>
                 Sign Up
             </Button>
         </Form>
