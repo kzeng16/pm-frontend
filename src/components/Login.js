@@ -1,13 +1,110 @@
 
-import React, { Component } from 'react';
+import React, { useState, Component } from 'react';
+import { Spinner, FormFeedback } from 'reactstrap';
+import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
 import { FaEnvelope, FaFacebook, FaGoogle, FaUniversity, FaLock } from 'react-icons/fa';
 import '../App.css';
-const parking_2 =  require('../images/parking_2.jpg');
-const parking_3 =  require('../images/parking_3.jpg');
-const parking_4 =  require('../images/parking_4.jpg');
+
 
 class Login extends Component {
+    constructor(props) {
+		super(props);
+
+		this.state = {
+			userName: "",
+			password: "",
+			loginErrors: "",
+			isUsernameInvalid: false,
+			isPasswordInvalid: false,
+			loginSuccess: false,
+			loading:false,
+        };
+        // this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
+    }   
+
+    handleLoginSuccess(data){
+        // Update Parent (Main) Component
+        // this.props.history.push('./Dashboard');
+    }
+	handleLogin = (event) => {
+		var hash = require('object-hash');
+
+		const { userName, password } = this.state;
+		this.setState({loading:true});
+		if ((userName === "") || (password === "")) { // if submitted without any input give error
+			this.setState({
+				isUsernameInvalid: true,
+				isPasswordInvalid: true,
+				loading: false
+			})
+		}
+    
+        // TODO: ONCE DONE TESTING change url to : http://34.73.25.235
+		// Retrieve user from backend
+		axios.post("http://localhost:3000/auth/login", {
+			username: userName,
+			password: password	// Hash before sendingweb
+		})
+		.then(result => {
+            // No response was recieved
+            if (!result){
+				console.log('login failure');
+				this.setState({loginSuccess: true});
+            }
+            // Login response is good
+			if (result.status === 200) {
+                console.log('login success');
+				// this.props.handleLoginSuccess(result.data);
+                
+				this.setState({loginSuccess: true});
+            }
+		})
+		.catch(function (error){
+            if (error.response) {
+                // Request made and server responded
+                console.log('error.response.data: ',error.response.data);
+                console.log('error.response.status: ',error.response.status);
+                console.log('error.response.headers: ',error.response.headers);
+              } 
+            if (error.request) {
+                // The request was made but no response was received
+                console.log('error.request: ',error.request);
+              } 
+            if (error.message) {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error: ', error.message);
+              }
+            this.setState({
+				loading:false,
+				isPasswordInvalid: true,
+				password:""
+            });
+        });
+	}   
+    
+    // Username Entered
+	handleUsernameChange = (event) => {
+		this.setState({ 
+			userName: event.target.value
+		})
+	}
+
+    // Password Entered
+	handlePasswordChange = (event) => {
+		this.setState({ 
+			password: event.target.value,
+			isPasswordInvalid: false
+		})
+	}
+
     render() {
+        const { isUsernameInvalid, isPasswordInvalid } = this.state;
+
+		if(this.state.loginSuccess) {
+			return <Redirect to="./Dashboard"/> // Redirect after login
+        }
+        
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -22,19 +119,30 @@ class Login extends Component {
                             <form>
                                 <div className="form-input mb-2">
                                     <span><FaEnvelope/></span>
-                                    <input type="email" required/>
-                                    <span className="floating-label">Email Address</span>
+                                    <input 
+                                    type="text"
+                                    value={this.state.userName}
+                                    onChange={this.handleUsernameChange}
+                                    invalid={this.state.isUsernameInvalid}
+                                    required/>
+                                    <span className="floating-label">Username</span>
                                 </div>
                                 <div className="form-input">
                                     <span><FaLock/></span>
-                                    <input type="password" required/>
+                                    <input
+                                    type="password"
+                                    value={this.state.password}
+                                    onChange={this.handlePasswordChange}
+                                    invalid={this.state.isPasswordInvalid}                                    
+                                    required/>
                                     <span className="floating-label">Password</span>
+                                    {isPasswordInvalid && <FormFeedback >Invalid Username/Password</FormFeedback>} {/*Error if login is not successful*/}
                                 </div>
                                 <div className="row mb-3">
                                     <div className="col-12 d-flex">
                                         <div className="custom-control custom-checkbox">
                                             <input type="checkbox" className="custom-control-input" id="cb1"/>
-                                            <label  className="custom-control-label text-black" for="cb1">Remember me?</label>
+                                            <label  className="custom-control-label text-black" htmlFor="cb1">Remember me?</label>
                                         </div>
 
                                         <div className="col-6 text-right">
@@ -43,7 +151,15 @@ class Login extends Component {
                                     </div>
                                 </div>
                                 <div className="text-left mb-3">
-                                        <button type="submit" class="btn">Login</button>
+                                        <button 
+                                        type="submit" 
+                                        className="btn"
+                                        onClick={this.handleLogin}
+                                        // handleLoginSuccess = {this.handleLoginSuccess}
+                                        disabled={this.state.loading || this.state.userName === "" || this.state.password === ""} // Disable button if fields are empty or when loading
+                                        >
+                                        {this.state.loading && <Spinner color="primary"/>} {/*Loading animation*/}
+                                        Login</button>
                                 </div>
                                 <div className="text-black mb-3">Or login with </div>
                                 <div className="row mb-3">
@@ -64,38 +180,11 @@ class Login extends Component {
                                     </div>
                                 </div>
                                 <div>Don't have an account?
-                                    <a href="./Register.js" className="register-link">Register here</a>
+                                    <Link to="./Register.js" className="register-link">Register here</Link>
                                 </div>
                             </form>
                         </div>
                     </div>
-
-                    {/* <div id="login-carousel" className="col-lg-6 col-md-6 d-block d-md-block carousel slide border border-primary" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner h-100 border border-success">
-                            <div class="carousel-item h-100 text-center active border border-warning">
-                                <img class="d-block h-100 w-100 border border-danger" src={parking_2} alt="First slide"/>
-                            </div>
-                            <div class="carousel-item h-100 text-center border border-warning">
-                                <img class="d-block h-100 w-100 border border-danger" src={parking_3} alt="Second slide"/>
-                            </div>
-                            <div class="carousel-item h-100 text-center border border-warning">
-                                <img class="d-block h-100 w-100 border border-danger" src={parking_4} alt="Third slide"/>
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-                    </div> */}
                     <div className="col-lg-6 col-md-6 d-none d-md-block image-container">
                     </div>
                 </div>
