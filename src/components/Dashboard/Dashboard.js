@@ -1,10 +1,9 @@
 import React, { useState, Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import '../App.css'; 
-import Navbar from './Navbar/Navbar';
-import Sidebar from './NavbarToggleButton/Sidebar';
-import Overlay from './Overlay/Overlay';
+import Navbar from '../Navbar/Navbar';
+import Sidebar from '../NavbarToggleButton/Sidebar';
+import Overlay from '../Overlay/Overlay';
 
 class Dashboard extends Component {
 

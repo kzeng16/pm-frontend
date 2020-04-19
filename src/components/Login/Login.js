@@ -4,7 +4,7 @@ import { Spinner, FormFeedback } from 'reactstrap';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { FaEnvelope, FaFacebook, FaGoogle, FaUniversity, FaLock } from 'react-icons/fa';
-import '../App.css';
+import './Login.css';
 
 
 class Login extends Component {
@@ -20,13 +20,13 @@ class Login extends Component {
 			loginSuccess: false,
 			loading:false,
         };
-        // this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
     }   
 
     handleLoginSuccess(data){
         // Update Parent (Main) Component
         // this.props.history.push('./Dashboard');
     }
+
 	handleLogin = (event) => {
 		var hash = require('object-hash');
 
@@ -180,7 +180,7 @@ class Login extends Component {
                                     </div>
                                 </div>
                                 <div>Don't have an account?
-                                    <Link to="./Register.js" className="register-link">Register here</Link>
+                                    <Link to="./Register.js" className="register-link"><span className="ml-2">Register here</span></Link>
                                 </div>
                             </form>
                         </div>
