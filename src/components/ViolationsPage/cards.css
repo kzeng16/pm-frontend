@@ -1,0 +1,33 @@
+/* .cards {
+	display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+}
+
+.card {
+    flex: 0 1 calc(25% - 1em);
+}
+
+@media screen and (min-width: 40em) {
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+ 
+    .card {
+        flex: 0 1 calc(50% - 1em);
+    }
+}
+
+@media screen and (min-width: 60em) {
+    .card {
+        flex: 0 1 calc(25% - 1em);
+    }
+} */
+
+.badge {
+    border-radius: 0 !important;
+    min-width: 113px !important;
+    display: inline-block !important
+}
