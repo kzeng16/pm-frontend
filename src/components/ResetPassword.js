@@ -35,7 +35,7 @@ export default class ResetPassword extends Component {
 
         if(this.validFormat()){
 
-            axios.post("/auth/reset", {
+            axios.post("http://api.parkingmanagerapp.com/auth/reset", {
                 email: email,
             })
             .then(result => {

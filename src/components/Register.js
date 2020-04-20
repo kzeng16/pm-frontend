@@ -108,7 +108,7 @@ handleSubmit = (event) => {
     
     if (this.validate()){
     
-        axios.post('/auth/signup', {
+        axios.post('http://api.parkingmanagerapp.com/auth/signup', {
             first_name: firstName,
             last_name: lastName,
             email: email,

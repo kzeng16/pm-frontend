@@ -42,7 +42,7 @@ class Login extends Component {
     
         // TODO: ONCE DONE TESTING change url to : http://34.73.25.235
 		// Retrieve user from backend
-		axios.post("http://localhost:3000/auth/login", {
+		axios.post("http://api.parkingmanagerapp.com/auth/login", {
 			username: userName,
 			password: password	// Hash before sendingweb
 		})
