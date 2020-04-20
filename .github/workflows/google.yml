@@ -25,8 +25,6 @@ env:
   IMAGE: parking-manager-frontend-image
   REGISTRY_HOSTNAME: gcr.io
   DEPLOYMENT_NAME: parking-manager-frontend-deployment
-  ENV_DATA: ${{ secrets.SERVER_ENV }}
-  ENV_FILE: .env
 
 jobs:
   setup-build-publish-deploy:
@@ -49,11 +47,6 @@ jobs:
         # Set up docker to authenticate
         # via gcloud command-line tool.
         gcloud auth configure-docker
-
-    - name: Create Enviroment Files
-      run: |
-        echo "$ENV_DATA" > "$ENV_FILE"
-      shell: bash
       
     # Build the Docker image
     - name: Build
