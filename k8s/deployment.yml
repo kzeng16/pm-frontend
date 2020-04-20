@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: parking-manager
+        app: parking-manager-frontend
     spec:
       containers:
       - name: parking-manager-frontend-container
