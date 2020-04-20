@@ -108,8 +108,8 @@ const ViolationPage = () => {
             }))
 
             aViolation.map(item=>(
-                setPlate(item.licensePlate),
-                setViolationType(item.violationType),
+                setPlate(item.license_plate),
+                setViolationType(item.violation_type),
                 setLocation(item.location),
                 setStatus(item.status),
                 setDescription(item.description)
@@ -157,8 +157,8 @@ const ViolationPage = () => {
  
         axios.post(`/tickets/${selected}`, { 
             withCredentials:true,
-            licensePlate: selectedLicensePlate,
-            violationType: selectedViolationType,
+            license_plate: selectedLicensePlate,
+            violation_type: selectedViolationType,
             description: selectedDescription,
             location: selectedLocation,
             status: selectedStatus    

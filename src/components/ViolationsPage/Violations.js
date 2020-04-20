@@ -1,11 +1,16 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { CardImg, Button, ListGroup, ListGroupItem, Spinner} from 'reactstrap';
 import './cards.css';
 import axios from 'axios';
 
 const Violations = ({ violations, loading, modal}) => {
 
-    const [ticketor, setTicketor] = useState("");
+    const [ticketors, setTicketors] = useState([
+        {
+            userId: '1234',
+            name: 'blank blank'
+        }
+    ]);
 
     if(loading) {
         return <h2>
@@ -15,17 +20,32 @@ const Violations = ({ violations, loading, modal}) => {
         </h2>; // spinner
     }
 
-    function editViolation(user_id) {
- 
-        axios.get(`/auth/user_info/${user_id}`, { withCredentials:true,})
-		.then(result => {
-			if (result.status === 200) {
-                setTicketor(result.data.first_name + " " + result.data.last_name);
+    
+    // matches user id to ticketor name, not being used
+    function getTicketorName(user_id) {
+        let obj, exists = false;
+        ticketors.map(user => {
+            if(user.userId === user_id){
+                exists = true;
             }
-		})
-		.catch(error => {
-            console.log('fail');
-		});
+        })
+        if(!exists) {
+            axios.get(`/auth/user_info/${user_id}`, { withCredentials:true,})
+            .then(result => {
+                if (result.status === 200) {
+                    obj = {
+                        userId: user_id,
+                        name:   (result.data.first_name + " " + result.data.last_name)
+                    };
+                    setTicketors(result => [...result, obj]);
+                    // console.log((result.data.first_name + " " + result.data.last_name));
+                    // return <div>{(result.data.first_name + " " + result.data.last_name)}</div>;
+                }
+            })
+            .catch(error => {
+                console.log('fail');
+            });
+        }
     }
 
     return (
@@ -48,19 +68,20 @@ const Violations = ({ violations, loading, modal}) => {
                                     <ListGroupItem className="pl-0 pb-0">
 
                                         <span className="badge badge-primary text-wrap p-2 px-3 mr-1" > Ticketor</span>
-                                            {editViolation(violation._userId)}{ticketor}
-
+                                            {/*getTicketorName(violation._userId)*/}
+                                            {/*ticketors.map(obj => (obj.userId === violation._userId ? obj.name : ""))*/}
+                                            {violation.ticketor_name}
                                     </ListGroupItem>
                                     <ListGroupItem className="pl-0 pb-0">
 
                                         <span className="badge badge-primary text-wrap p-2 px-3 mr-1" > License Plate</span>
-                                            {violation.licensePlate}
+                                            {violation.license_plate}
 
                                     </ListGroupItem>
                                     <ListGroupItem className="pl-0 pb-0">
 
                                         <span className="badge badge-primary text-wrap p-2 px-3 mr-1" > Violation Type</span>
-                                            {violation.violationType}
+                                            {violation.violation_type}
 
                                     </ListGroupItem>
                                     <ListGroupItem className="pl-0 pb-0">
