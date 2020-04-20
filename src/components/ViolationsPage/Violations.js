@@ -20,7 +20,6 @@ const Violations = ({ violations, loading, modal}) => {
         </h2>; // spinner
     }
 
-<<<<<<< HEAD
     
     // matches user id to ticketor name, not being used
     function getTicketorName(user_id) {
@@ -28,14 +27,6 @@ const Violations = ({ violations, loading, modal}) => {
         ticketors.map(user => {
             if(user.userId === user_id){
                 exists = true;
-=======
-    function editViolation(user_id) {
- 
-        axios.get(`http://api.parkingmanagerapp.com/auth/user_info/${user_id}`, { withCredentials:true,})
-		.then(result => {
-			if (result.status === 200) {
-                setTicketor(result.data.first_name + " " + result.data.last_name);
->>>>>>> make-deployable
             }
         })
         if(!exists) {
@@ -90,7 +81,7 @@ const Violations = ({ violations, loading, modal}) => {
                                     <ListGroupItem className="pl-0 pb-0">
 
                                         <span className="badge badge-primary text-wrap p-2 px-3 mr-1" > Violation Type</span>
-                                            {violation.violation_type}
+                                            {violation.violation}
 
                                     </ListGroupItem>
                                     <ListGroupItem className="pl-0 pb-0">

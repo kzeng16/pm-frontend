@@ -109,7 +109,7 @@ const ViolationPage = () => {
 
             aViolation.map(item=>(
                 setPlate(item.license_plate),
-                setViolationType(item.violation_type),
+                setViolationType(item.violation),
                 setLocation(item.location),
                 setStatus(item.status),
                 setDescription(item.description)
@@ -158,7 +158,7 @@ const ViolationPage = () => {
         axios.post(`http://api.parkingmanagerapp.com/tickets/${selected}`, { 
             withCredentials:true,
             license_plate: selectedLicensePlate,
-            violation_type: selectedViolationType,
+            violation: selectedViolationType,
             description: selectedDescription,
             location: selectedLocation,
             status: selectedStatus    
