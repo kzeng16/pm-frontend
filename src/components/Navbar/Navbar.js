@@ -9,7 +9,7 @@ const Navbar = props => (
     <header className="toolbar">
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
         {/* Show this on mobile to medium screens */}
-        <a className="navbar-brand d-lg-none brand" href="#"><FaParking style={{color: '#6d7fcc', fontSize:'24px'}}/></a>
+        <a className="navbar-brand d-lg-none brand" href="#"><FaParking style={{color: '#d39e00', fontSize:'24px'}}/></a>
         {/* Navbar Content */}
         <div className="toolbar-toggle-button">
             <NavbarToggleButton click={props.navbarToggleHandler}/>
@@ -35,7 +35,7 @@ const Navbar = props => (
             </ul>
             {/* Show this on large screens */}
             {/* Brand */}
-            <a className="navbar-brand d-none d-lg-block brand" href="#"><FaParking style={{color: '#6d7fcc', fontSize:'24px'}}/><span id="brand-text">arking Services</span></a>
+            <a className="navbar-brand d-none d-lg-block brand" href="#"><FaParking style={{color: '#d39e00', fontSize:'24px'}}/><span id="brand-text">arking Services</span></a>
             {/* Nav links */}
             <ul className="navbar-nav list-unstyled ml-auto" id="toolbar-nav-items">
                 <li className="nav-item">

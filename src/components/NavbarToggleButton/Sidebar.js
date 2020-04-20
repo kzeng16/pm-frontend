@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import './Sidebar.css';
 
 const Sidebar = props => {
@@ -8,6 +9,8 @@ const Sidebar = props => {
     sidebarClasses = 'sidebar open';
   }
   
+  
+
   // <!-- A vertical navbar -->
     return (
       <div className="wrapper">
@@ -30,10 +33,10 @@ const Sidebar = props => {
               </ul>
             </li>
             <li>
-              <a href="#">Dashboard</a>
+              <a href="/Dashboard">Dashboard</a>
             </li>
             <li>
-              <a href="#">Violations</a>
+              <a href="/Violations">Violations</a>
             </li>
           </ul>
 

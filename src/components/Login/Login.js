@@ -3,7 +3,8 @@ import React, { useState, Component } from 'react';
 import { Spinner, FormFeedback } from 'reactstrap';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { FaEnvelope, FaFacebook, FaGoogle, FaUniversity, FaLock } from 'react-icons/fa';
+import Logo from '../../images/UCF-01.jpg';
+import { FaEnvelope, FaFacebook, FaGoogle, FaUniversity, FaLock, FaParking } from 'react-icons/fa';
 import './Login.css';
 
 
@@ -42,7 +43,7 @@ class Login extends Component {
     
         // TODO: ONCE DONE TESTING change url to : http://34.73.25.235
 		// Retrieve user from backend
-		axios.post("http://localhost:3000/auth/login", {
+		axios.post("http://api.parkingmanagerapp.com/auth/login", {
 			username: userName,
 			password: password	// Hash before sendingweb
 		})
@@ -110,11 +111,14 @@ class Login extends Component {
                 <div className="row">
                     <div className="col-lg-6 col-md-6 form-container">
                         <div className="col-lg-8 col-md-12 col-sm-9 col-xs-12 form-box text-center">
-                            <div className="logo mt-0 mb-3">
-                                <img src="../images/logo_2.png" alt="logo"/>
+                            <div className="ucf-logo mt-0 mb-3 p-0 h-25">
+                                <img className="" id="ucf-logo-img" src={Logo} alt="ucf-logo"/>
                             </div>
-                            <div className="heading mb-3">
-                                <h4>Login to your account</h4>
+                            <div className="logo mt-0 mb-4">
+                            <FaParking style={{color: '#d39e00', fontSize:'24px'}}/><span id="brand-text">arking Services</span>
+                            </div>
+                            <div className="heading mt-1 mb-5">
+                                <h5>Login to your account</h5>
                             </div>
                             <form>
                                 <div className="form-input mb-2">
@@ -146,7 +150,7 @@ class Login extends Component {
                                         </div>
 
                                         <div className="col-6 text-right">
-                                            <a href="forget.js" className="forget-link">Forgot password</a>
+                                            <a href="/ResetPassword" className="forget-link">Forgot password</a>
                                         </div>
                                     </div>
                                 </div>
@@ -161,26 +165,9 @@ class Login extends Component {
                                         {this.state.loading && <Spinner color="primary"/>} {/*Loading animation*/}
                                         Login</button>
                                 </div>
-                                <div className="text-black mb-3">Or login with </div>
-                                <div className="row mb-3">
-                                    <div className="col-4">
-                                        <a href="" className="btn btn-block btn-social btn-facebook">
-                                        <FaFacebook/>
-                                        </a>
-                                    </div>
-                                    <div className="col-4">
-                                        <a href="" className="btn btn-block btn-social btn-google">
-                                        <FaGoogle/>
-                                        </a>
-                                    </div>
-                                    <div className="col-4">
-                                        <a href="" className="btn btn-block btn-social btn-university">
-                                        <FaUniversity/>
-                                        </a>
-                                    </div>
-                                </div>
+                                
                                 <div>Don't have an account?
-                                    <Link to="./Register.js" className="register-link"><span className="ml-2">Register here</span></Link>
+                                    <Link to="./Register" className="register-link"><span className="ml-2">Register here</span></Link>
                                 </div>
                             </form>
                         </div>
