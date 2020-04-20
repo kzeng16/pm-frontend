@@ -18,7 +18,7 @@ spec:
       - name: parking-manager-frontend-container
         image: gcr.io/PROJECT_ID/IMAGE:TAG
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         resources:
           requests:
             cpu: 100m
