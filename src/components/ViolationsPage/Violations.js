@@ -81,7 +81,7 @@ const Violations = ({ violations, loading, modal}) => {
                                     <ListGroupItem className="pl-0 pb-0">
 
                                         <span className="badge badge-primary text-wrap p-2 px-3 mr-1" > Violation Type</span>
-                                            {violation.violation_type}
+                                            {violation.violation}
 
                                     </ListGroupItem>
                                     <ListGroupItem className="pl-0 pb-0">

@@ -48,7 +48,7 @@ const ViolationPage = () => {
         const fetchPosts = async () => {
             setLoading(true);
             try {
-                const res = await axios.get('/tickets/query',{ withCredentials: true,
+                const res = await axios.get('http://api.parkingmanagerapp.com/tickets/query',{ withCredentials: true,
                     params: {
                         _userId: [userId]
                     }
@@ -69,7 +69,7 @@ const ViolationPage = () => {
         const getUserInfo = async () => {
             setLoading(true);
             try{
-                const res = await axios.get('/auth/user_info',{ withCredentials: true})
+                const res = await axios.get('http://api.parkingmanagerapp.com/auth/user_info',{ withCredentials: true})
                 if (res.status != 200){
                     setLoading(false);
                     setloggedIn(false);
@@ -109,7 +109,7 @@ const ViolationPage = () => {
 
             aViolation.map(item=>(
                 setPlate(item.license_plate),
-                setViolationType(item.violation_type),
+                setViolationType(item.violation),
                 setLocation(item.location),
                 setStatus(item.status),
                 setDescription(item.description)
@@ -155,10 +155,10 @@ const ViolationPage = () => {
     // Request to edit a ticket
     const editViolation = (event) => {
  
-        axios.post(`/tickets/${selected}`, { 
+        axios.post(`http://api.parkingmanagerapp.com/tickets/${selected}`, { 
             withCredentials:true,
             license_plate: selectedLicensePlate,
-            violation_type: selectedViolationType,
+            violation: selectedViolationType,
             description: selectedDescription,
             location: selectedLocation,
             status: selectedStatus    
