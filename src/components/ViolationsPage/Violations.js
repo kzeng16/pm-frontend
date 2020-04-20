@@ -17,7 +17,7 @@ const Violations = ({ violations, loading, modal}) => {
 
     function editViolation(user_id) {
  
-        axios.get(`/auth/user_info/${user_id}`, { withCredentials:true,})
+        axios.get(`http://api.parkingmanagerapp.com/auth/user_info/${user_id}`, { withCredentials:true,})
 		.then(result => {
 			if (result.status === 200) {
                 setTicketor(result.data.first_name + " " + result.data.last_name);
