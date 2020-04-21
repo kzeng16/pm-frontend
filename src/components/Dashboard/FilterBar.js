@@ -47,6 +47,9 @@ export default class FilterView extends Component {
             .then((response) => {
                 console.log(response);
                 const tickets = response.data.docs;
+                if (!tickets) {
+                    return;
+                }
                 this.setState({
                     tickets: tickets,
                 });
