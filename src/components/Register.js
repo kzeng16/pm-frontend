@@ -107,7 +107,7 @@ handleSubmit = (event) => {
     
     if (this.validate()){
     
-        axios.post('http://api.parkingmanagerapp.com/auth/signup', {
+        axios.post('/auth/signup', {
             first_name: firstName,
             last_name: lastName,
             email: email,
@@ -258,6 +258,9 @@ render() {
             <Button className="btn-warning btn-lg btn-block rounded-pill"onClick={this.handleSubmit}>
                 Sign Up
             </Button>
+            <div>Already have an account?
+                <Link to="./login" className="register-link"><span className="ml-2">Login here</span></Link>
+            </div>
         </Form>
     );
 }
