@@ -103,7 +103,6 @@ validate = () => { // Checking valid strings for each input
 }
 
 handleSubmit = (event) => {
-    var hash = require('object-hash');
     const { firstName, lastName, email, userName, password, confirmPassword } = this.state;
     
     if (this.validate()){
@@ -113,8 +112,8 @@ handleSubmit = (event) => {
             last_name: lastName,
             email: email,
             username: userName,
-            password: hash(password, { algorithm: 'md5', encoding: 'base64' }),
-            password_confirmation: hash(confirmPassword, { algorithm: 'md5', encoding: 'base64' })
+            password: password,
+            password_confirmation: confirmPassword,
         })
         .then((response) => {
             this.setState({successfulRegister: true})	// Set to true to redirect
@@ -175,7 +174,7 @@ render() {
     }
 
     return (
-        <Form className="container-fluid col-lg-6 bg-light pb-3 pt-3 mt-5 rounded">
+        <Form className="container-fluid col-lg-4 bg-light pb-3 pt-3 mt-5 rounded">
             <h3 className="text-center pb-2 pt-2 font-weight-bold "> Register </h3>
             <div className="row">
                 <FormGroup className="col-5">
