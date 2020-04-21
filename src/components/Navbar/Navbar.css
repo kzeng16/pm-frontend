@@ -1,0 +1,33 @@
+/* NAVBAR STYLING MOVE TO NAVBAR.CSS */
+.navbar{
+    padding:15px 10px; 
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.brand{
+    transform: scale(1.5);
+}
+
+#brand-text{
+    vertical-align: middle;
+}
+
+#profile-text {
+    font-size: 1em;
+    font-weight: bold;
+    vertical-align: top;
+}
+@media (max-width: 768px) {
+    .toolbar-nav-items{
+        display: none;
+    }
+}
+@media (max-width: 769px) {
+    .toolbar-toggle-button{
+       margin-left: auto;
+    }
+}   

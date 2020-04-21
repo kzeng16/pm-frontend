@@ -18,6 +18,7 @@ export default class Plots extends Component {
                 "garage_a": 0,
                 "garage_b": 0,
                 "garage_c": 0
+
             },
             date: new Date(),
             date_1: new Date(),
@@ -120,6 +121,7 @@ export default class Plots extends Component {
             this.state.date_3.setDate(this.state.date.getDate() - 3);
             this.state.date_4.setDate(this.state.date.getDate() - 4);
             this.state.date_5.setDate(this.state.date.getDate() - 5);
+
         this.grabData();
         this.getTicketsbyDay(this.state.date.getTime(), this.state.date_1.getTime(), 0);
         this.getTicketsbyDay(this.state.date_1.getTime(), this.state.date_2.getTime(), 1);
@@ -152,6 +154,7 @@ export default class Plots extends Component {
                     }
                     ]}
                     layout={ {width: 380, height: 380, title: 'Violations Per Location'} }
+
                 />
 
                 <Plot   // Violation type pie chart
@@ -163,6 +166,7 @@ export default class Plots extends Component {
                     }
                     ]}
                     layout={ {width: 380, height: 380, title: 'Violation Type Ratio'} }
+
                 />
                 <Plot   // Violations per day bar graph
                     data={[
@@ -173,6 +177,7 @@ export default class Plots extends Component {
                     }
                     ]}
                     layout={ {width: 380, height: 380, title: 'Violations Per Day', xaxis:{title:'Day'}, yaxis:{title:'Violations'}} }
+
                     
                 />
             </div>
