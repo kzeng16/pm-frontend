@@ -1,7 +1,8 @@
 import React, { Component, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
-import { Range } from 'rc-slider';
 import DatePicker from "react-datepicker";
+import Plot from 'react-plotly.js';
+import { Range } from 'rc-slider';
 import axios from 'axios';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,7 +11,17 @@ import 'rc-slider/assets/index.css';
 import './filter.css'
 
 const querystring = require('querystring');
-const apiEndpoint = 'http://api.parkingmanagerapp.com';
+const apiEndpoint = 'http://localhost:8080';
+
+/**
+* Converts a day number to a string.
+*
+* @param {Number} dayIndex
+* @return {String} Returns day as string
+*/
+function dayOfWeekAsString(dayIndex) {
+    return ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"][dayIndex];
+  }
 
 export default class FilterView extends Component {
     constructor(props) {
@@ -26,6 +37,10 @@ export default class FilterView extends Component {
             locations: [],
             statusTypes: [],
             tickets: [],
+            violationPerDay: [],
+            violationPerType: [],
+            violationPerLocation: [],
+            violationPerStatus: [],
         };
 
         this.handleGetFormattedTime = this.handleGetFormattedTime.bind(this);
@@ -46,8 +61,12 @@ export default class FilterView extends Component {
             })
             .then((response) => {
                 console.log(response);
+                if (!response) {
+                    return;
+                }
                 const tickets = response.data.docs;
                 if (!tickets) {
+                    console.log('ohoh');
                     return;
                 }
                 this.setState({
@@ -61,7 +80,36 @@ export default class FilterView extends Component {
                 const violations = new Map();
                 const status = new Map();
 
+                const fillViolation = (object, object2, object3, fun) => {
+                    let index = object2[object3];
+                    if (fun) {
+                        index = fun(object2[object3]);
+                    }
+                    if (!object[index]) {
+                        object[index] = [];
+                    }
+
+                    object[index].push(object2);
+                }
+                
+                const violationPerLocation = {};
+                const violationPerType = {};
+                const violationPerDay = {};
+                const violationPerStatus = {};
                 tickets.forEach((ticket) => {
+
+                    fillViolation(violationPerLocation, ticket, 'location');
+                    fillViolation(violationPerDay, ticket, 'createdAt', (date) => new Date(date).getDay());
+                    fillViolation(violationPerType, ticket, 'violation');
+                    fillViolation(violationPerStatus, ticket, 'status');
+
+
+                    if (!violationPerLocation[ticket.location]) {
+                        violationPerLocation[ticket.location] = [];
+                    }
+
+                    violationPerLocation[ticket.location].push(ticket);
+
                     locations.set(ticket.location, 1 + (locations.get(ticket.location) || 0));
                     violations.set(ticket.violation, 1 + (violations.get(ticket.violation) || 0));
                     status.set(ticket.status, 1 + (status.get(ticket.status) || 0));
@@ -92,7 +140,14 @@ export default class FilterView extends Component {
                 this.setState({
                     violationTypes: _violations,
                     locations: _locations,
+                    violationPerLocation: violationPerLocation,
+                    violationPerType: violationPerType,
+                    violationPerStatus: violationPerStatus,
+                    violationPerDay: violationPerDay,
                 });
+
+                console.log(violationPerDay);
+                console.log(Object.values(violationPerLocation).map(violationArray => violationArray.length));
             });
     }
 
@@ -123,7 +178,6 @@ export default class FilterView extends Component {
             endDay: endDayMinutes,
         })
     }
-
 
     handleSliderDoneChange = slider => {
         this.grabTickets();
@@ -193,6 +247,16 @@ export default class FilterView extends Component {
     }
     
     render() {
+
+        const { 
+            violationPerDay, 
+            violationPerLocation,
+            violationPerType,
+            date, date_1, date_2, date_3, date_4, 
+            day0tix, day1tix, day2tix, day3tix, day4tix,
+        } = this.state;
+        //var month = (date.getMonth() + 1).toString();
+        
         return (
             // <div className="container border border-danger">
             //     <div clasName="row">
@@ -210,97 +274,138 @@ export default class FilterView extends Component {
             //         </div>
             //     </div>
             // </div>
-            <div class="container filter-container">
-                <div class="top-padding"/>
-                <div class="row row-label">
-                    Date:
-                </div>
-                <div class="row">
-                    <div class="col-6 text-center">
-                        <label>Start Day</label>
-                        <div>
-                            <DatePicker
-                            selected={this.state.startDate}
-                            onChange={this.handleStartDateChange}
-                            />
 
+
+            <div>
+
+                <Plot   // Violation per location pie chart
+                    data={[
+                    {
+                        values: Object.values(violationPerLocation).map(violationArray => violationArray.length),
+                        labels: Object.keys(violationPerLocation),
+                      type: 'pie'
+                    }
+                    ]}
+                    layout={ {width: 380, height: 380, title: 'Violations Per Location'} }
+
+                />
+                <Plot   // Violation type pie chart
+                    data={[
+                        {
+                            values: Object.values(violationPerType).map(violationArray => violationArray.length),
+                            labels: Object.keys(violationPerType),
+                            type: 'pie'
+                    }
+                    ]}
+                    layout={ {width: 380, height: 380, title: 'Violation Type Ratio'} }
+
+                />
+                <Plot   // Violations per day bar graph
+                    data={[
+                        {
+                            x: Object.keys(violationPerDay).map(intDay => dayOfWeekAsString(intDay)),
+                            y: Object.values(violationPerDay).map(violationArray => violationArray.length),
+                            type: 'bar'
+                    }
+                    ]}
+                    layout={ {width: 380, height: 380, title: 'Violations Per Day', xaxis:{title:'Day'}, yaxis:{title:'Violations'}} }
+
+                    
+                />
+
+                <div class="container filter-container">
+                    <div class="top-padding"/>
+                    <div class="row row-label">
+                        Date:
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <label>Start Day</label>
+                            <div>
+                                <DatePicker
+                                selected={this.state.startDate}
+                                onChange={this.handleStartDateChange}
+                                />
+
+                            </div>
+                        </div>
+                        <div class="col-6 text-center">
+                        <label>End Day</label>
+
+                            <DatePicker
+                        selected={this.state.endDate}
+                        onChange={this.handleEndDateChange}
+                        />
                         </div>
                     </div>
-                    <div class="col-6 text-center">
-                    <label>End Day</label>
 
-                         <DatePicker
-                     selected={this.state.endDate}
-                     onChange={this.handleEndDateChange}
-                    />
+                    <hr/>
+
+                    <div class="row row-label">
+                        Time of Day:
                     </div>
-                </div>
-
-                <hr/>
-
-                <div class="row row-label">
-                    Time of Day:
-                </div>
-                <div class="row">
-                    <div class="col-6 text-center">
-                    <label>{
-                        <label>{this.handleGetFormattedTime(this.state.startDay)}</label>
-                    }</label>
+                    <div class="row">
+                        <div class="col-6 text-center">
+                        <label>{
+                            <label>{this.handleGetFormattedTime(this.state.startDay)}</label>
+                        }</label>
+                        </div>
+                        <div class="col-6 text-center">
+                        <label>{
+                            <label>{this.handleGetFormattedTime(this.state.endDay)}</label>
+                        }</label>
+                        </div>
                     </div>
-                    <div class="col-6 text-center">
-                    <label>{
-                        <label>{this.handleGetFormattedTime(this.state.endDay)}</label>
-                    }</label>
+
+                    <div class="row range">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                        <Range
+                            min={0}
+                            max={1440}
+                            allowCross={false}
+                            defaultValue={[0, 1440]}
+                            onChange={this.handleSliderChange}
+                            onAfterChange={this.handleSliderDoneChange}
+                        />
+                        </div>
+                        <div class="col-1"></div>
                     </div>
-                </div>
 
-                <div class="row range">
-                    <div class="col-1"></div>
-                    <div class="col-10">
-                    <Range
-                        min={0}
-                        max={1440}
-                        allowCross={false}
-                        defaultValue={[0, 1440]}
-                        onChange={this.handleSliderChange}
-                        onAfterChange={this.handleSliderDoneChange}
-                    />
+                    <hr/>
+
+                    <div class="row row-label">
+                        Violation Types:
                     </div>
-                    <div class="col-1"></div>
-                </div>
-
-                <hr/>
-
-                <div class="row row-label">
-                    Violation Types:
-                </div>
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-10 row-container">
-                        <hr/>
-                        {this.renderViolationDivs()}
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10 row-container">
+                            <hr/>
+                            {this.renderViolationDivs()}
+                        </div>
+                        <div class="col-1"></div>
                     </div>
-                    <div class="col-1"></div>
-                </div>
 
-                <hr/>
+                    <hr/>
 
-                <div class="row row-label">
-                    Locations:
-                </div>
-
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-10 row-container">
-                        <hr/>
-                        {this.renderLocationDivs()}
+                    <div class="row row-label">
+                        Locations:
                     </div>
-                    <div class="col-1"></div>
-                </div>
-                <div class="row row-label">
-                    
+
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10 row-container">
+                            <hr/>
+                            {this.renderLocationDivs()}
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row row-label">
+                        
+                    </div>
                 </div>
             </div>
+
             // <div>
             //     <DatePicker
             //         selected={this.state.startDate}
