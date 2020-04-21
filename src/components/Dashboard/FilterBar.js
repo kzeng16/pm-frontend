@@ -10,13 +10,14 @@ import 'rc-slider/assets/index.css';
 import './filter.css'
 
 const querystring = require('querystring');
-const apiEndpoint = 'http://localhost:8080';
+const apiEndpoint = 'http://api.parkingmanagerapp.com';
 
 export default class FilterView extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            init: true,
             startDate: new Date('1970-01-01Z00:00:00:000'),
             endDate: new Date(),
             startDay: 0 /*minutes*/,
@@ -31,7 +32,7 @@ export default class FilterView extends Component {
     }
 
     grabTickets() {
-        axios.get(`${apiEndpoint}/tickets/query?` +  
+        axios.get(`${apiEndpoint}/tickets/query_limited?` +  
                     querystring.stringify({
                         created_after: this.state.startDate.getTime(),
                         created_before: this.state.endDate.getTime(),
@@ -77,17 +78,18 @@ export default class FilterView extends Component {
                     _locations.push([v,k]);
                 })
 
+                if (this.state.init) {
+                    this.setState({
+                        startDate: minimumDate,
+                        endDate: maximumDate,
+                        init: false,
+                    });
+                }
+
                 this.setState({
-                    startDate: minimumDate,
-                    endDate: maximumDate,
                     violationTypes: _violations,
                     locations: _locations,
                 });
-
-                console.log(this.state.violationTypes);
-
-                console.log(minimumDate);
-                console.log(maximumDate);
             });
     }
 
@@ -97,20 +99,16 @@ export default class FilterView extends Component {
         }
         this.setState({
             startDate: date,
-        });
-
-        this.grabTickets();
+        }, this.grabTickets());
     }
 // 1:32PM
     handleEndDateChange = date => {
-        if (date < this.state.endDate) {
+        if (date < this.state.startDate) {
             return;
         }
         this.setState({
             endDate: date,
-        });
-
-        this.grabTickets();
+        }, this.grabTickets());
     }
 
     handleSliderChange = slider => {
@@ -120,8 +118,12 @@ export default class FilterView extends Component {
         this.setState({
             startDay: startDayMinutes,
             endDay: endDayMinutes,
-        });
+        })
+    }
 
+
+    handleSliderDoneChange = slider => {
+        this.grabTickets();
     }
 
     handleGetFormattedTime = _minutes => {
@@ -138,7 +140,6 @@ export default class FilterView extends Component {
     renderViolationDivs() {
         const divs = [];
         this.state.violationTypes.forEach(violation => {
-            console.log(violation);
             divs.push(
                 <div>
                     <div class="row">
@@ -163,7 +164,6 @@ export default class FilterView extends Component {
     renderLocationDivs() {
         const divs = [];
         this.state.locations.forEach(locations => {
-            console.log(locations);
             divs.push(
                 <div>
                     <div class="row">
@@ -260,6 +260,7 @@ export default class FilterView extends Component {
                         allowCross={false}
                         defaultValue={[0, 1440]}
                         onChange={this.handleSliderChange}
+                        onAfterChange={this.handleSliderDoneChange}
                     />
                     </div>
                     <div class="col-1"></div>
