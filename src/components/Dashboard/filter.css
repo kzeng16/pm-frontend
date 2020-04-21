@@ -1,0 +1,28 @@
+.filter-container {
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, .3);
+    width: 450px;
+}
+
+.row-label {
+    margin-left: 10px;
+    margin-bottom: 25px;
+}
+
+.top-padding {
+    margin-top: 25px;
+}
+
+.test {
+    padding-left: -50px;
+}
+
+.row-container {
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, .15);
+    border-radius: 7px;
+    margin-bottom: 10px;
+}
