@@ -4,29 +4,13 @@ import { Range } from 'rc-slider';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 
-//import 'react-datepicker/dist/react-datepicker.css';
-//import 'react-virtualized/styles.css';
-//import 'rc-slider/assets/index.css';
-//import './filter.css'
+import 'react-datepicker/dist/react-datepicker.css';
+import 'react-virtualized/styles.css';
+import 'rc-slider/assets/index.css';
+import './filter.css'
 
 const querystring = require('querystring');
 const apiEndpoint = 'http://localhost:8080';
-
-// all props are passed by the List component
-const Row = ({ index, style, data }) => {
-    if (!data[index]) {
-        return '';
-    }
-    const count = data[index][0];
-    const violation = data[index][1];
-
-    // style is passed by the List component to give our Row the correct dimensions
-    return (
-      <div style={style} key={index}>
-        {violation} {count}
-      </div>
-    );
-};
 
 export default class FilterView extends Component {
     constructor(props) {
@@ -75,8 +59,8 @@ export default class FilterView extends Component {
 
                 tickets.forEach((ticket) => {
                     locations.set(ticket.location, 1 + (locations.get(ticket.location) || 0));
-                    violations.set(ticket.violation, 1 + (locations.get(ticket.violation) || 0));
-                    status.set(ticket.status, 1 + (locations.get(ticket.status) || 0));
+                    violations.set(ticket.violation, 1 + (violations.get(ticket.violation) || 0));
+                    status.set(ticket.status, 1 + (status.get(ticket.status) || 0));
 
                     const ticketDate = new Date(ticket.createdAt);
                     minimumDate = minimumDate > ticketDate ? ticketDate : minimumDate;
@@ -84,14 +68,20 @@ export default class FilterView extends Component {
                 });
 
                 const _violations = [];
-                locations.forEach((v,k,m) => {
+                violations.forEach((v,k,m) => {
                     _violations.push([v,k]);
+                })
+
+                const _locations = [];
+                locations.forEach((v,k,m) => {
+                    _locations.push([v,k]);
                 })
 
                 this.setState({
                     startDate: minimumDate,
                     endDate: maximumDate,
                     violationTypes: _violations,
+                    locations: _locations,
                 });
 
                 console.log(this.state.violationTypes);
@@ -132,7 +122,6 @@ export default class FilterView extends Component {
             endDay: endDayMinutes,
         });
 
-        this.grabTickets();
     }
 
     handleGetFormattedTime = _minutes => {
@@ -144,6 +133,56 @@ export default class FilterView extends Component {
         minutes = minutes < 10 ? '0'+minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         return strTime;
+    }
+
+    renderViolationDivs() {
+        const divs = [];
+        this.state.violationTypes.forEach(violation => {
+            console.log(violation);
+            divs.push(
+                <div>
+                    <div class="row">
+                        <div class="col-3">
+                            <input type="checkbox"/>
+                        </div>
+                        <div class="col-6">
+                            <label>{violation[1]}</label>
+                        </div>
+                        <div class="col-2">
+                            <label>{violation[0]}</label>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            )
+        });
+
+        return divs;
+    }
+
+    renderLocationDivs() {
+        const divs = [];
+        this.state.locations.forEach(locations => {
+            console.log(locations);
+            divs.push(
+                <div>
+                    <div class="row">
+                        <div class="col-3">
+                            <input type="checkbox"/>
+                        </div>
+                        <div class="col-6">
+                            <label>{locations[1]}</label>
+                        </div>
+                        <div class="col-2">
+                            <label>{locations[0]}</label>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            )
+        });
+
+        return divs;
     }
 
     componentDidMount() {
@@ -168,14 +207,94 @@ export default class FilterView extends Component {
             //         </div>
             //     </div>
             // </div>
-            <div class="container">
+            <div class="container filter-container">
+                <div class="top-padding"/>
+                <div class="row row-label">
+                    Date:
+                </div>
                 <div class="row">
-                    <div class="col">
-                    1 of 3
+                    <div class="col-6 text-center">
+                        <label>Start Day</label>
+                        <div>
+                            <DatePicker
+                            selected={this.state.startDate}
+                            onChange={this.handleStartDateChange}
+                            />
+
+                        </div>
                     </div>
-                    <div class="col">
-                        width of 2 other columns
+                    <div class="col-6 text-center">
+                    <label>End Day</label>
+
+                         <DatePicker
+                     selected={this.state.endDate}
+                     onChange={this.handleEndDateChange}
+                    />
                     </div>
+                </div>
+
+                <hr/>
+
+                <div class="row row-label">
+                    Time of Day:
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center">
+                    <label>{
+                        <label>{this.handleGetFormattedTime(this.state.startDay)}</label>
+                    }</label>
+                    </div>
+                    <div class="col-6 text-center">
+                    <label>{
+                        <label>{this.handleGetFormattedTime(this.state.endDay)}</label>
+                    }</label>
+                    </div>
+                </div>
+
+                <div class="row range">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                    <Range
+                        min={0}
+                        max={1440}
+                        allowCross={false}
+                        defaultValue={[0, 1440]}
+                        onChange={this.handleSliderChange}
+                    />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <hr/>
+
+                <div class="row row-label">
+                    Violation Types:
+                </div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10 row-container">
+                        <hr/>
+                        {this.renderViolationDivs()}
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <hr/>
+
+                <div class="row row-label">
+                    Locations:
+                </div>
+
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10 row-container">
+                        <hr/>
+                        {this.renderLocationDivs()}
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="row row-label">
+                    
                 </div>
             </div>
             // <div>
@@ -188,35 +307,14 @@ export default class FilterView extends Component {
             //         onChange={this.handleEndDateChange}
             //     />
             //     <div class="grid-container slider-grid">
+
             //         <div class="grid-item slider-date">
-            //             <label>{
-            //             <label>{this.handleGetFormattedTime(this.state.startDay)}</label>
-            //         }</label>
+
             //         </div>
-            //         <div class="grid-item slider-date">
-            //         <label>{
-            //             <label>{this.handleGetFormattedTime(this.state.endDay)}</label>
-            //         }</label>
-            //         </div>
-            //         <Range class="grid-item slider"
-            //             min={0}
-            //             max={1440}
-            //             allowCross={false}
-            //             defaultValue={[0, 1440]}
-            //             onChange={this.handleSliderChange}
-            //         />
+
             //     </div>
 
-            //     <List
-            //         className="List"
-            //         height={500}
-            //         itemCount={3}
-            //         itemSize={35}
-            //         width={300}
-            //         itemData={this.state.violationTypes}
-            //     >
-            //         {Row}
-            //     </List>
+
 
             // </div>
 
