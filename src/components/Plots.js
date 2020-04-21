@@ -16,7 +16,9 @@ export default class Plots extends Component {
             },
             tickets_by_location: {
                 "garage_a": 0,
-                "garage_b": 0
+                "garage_b": 0,
+                "garage_c": 0
+
             },
             date: new Date(),
             date_1: new Date(),
@@ -44,6 +46,9 @@ export default class Plots extends Component {
 
             if (result.data.tickets_by_location["Garage B"] != undefined)
                 tickets_by_location.garage_b = result.data.tickets_by_location["Garage B"];
+
+            if (result.data.tickets_by_location["Garage C"] != undefined)
+                tickets_by_location.garage_c = result.data.tickets_by_location["Garage C"];
 
             if(result.data.tickets_by_violation["Expired Tag"] != undefined)
                 tickets_by_violation.expired_tag = result.data.tickets_by_violation["Expired Tag"];
@@ -116,7 +121,7 @@ export default class Plots extends Component {
             this.state.date_3.setDate(this.state.date.getDate() - 3);
             this.state.date_4.setDate(this.state.date.getDate() - 4);
             this.state.date_5.setDate(this.state.date.getDate() - 5);
-        
+
         this.grabData();
         this.getTicketsbyDay(this.state.date.getTime(), this.state.date_1.getTime(), 0);
         this.getTicketsbyDay(this.state.date_1.getTime(), this.state.date_2.getTime(), 1);
@@ -143,12 +148,13 @@ export default class Plots extends Component {
                 <Plot   // Violation per location pie chart
                     data={[
                     {
-                      values: [tickets_by_location.garage_a, tickets_by_location.garage_b],
-                      labels:['Garage A', 'Garage B'],
+                      values: [tickets_by_location.garage_a, tickets_by_location.garage_b, tickets_by_location.garage_c],
+                      labels:['Garage A', 'Garage B', 'Garage C'],
                       type: 'pie'
                     }
                     ]}
-                    layout={ {width: 360, height: 360, title: 'Violations Per Location'} }
+                    layout={ {width: 380, height: 380, title: 'Violations Per Location'} }
+
                 />
 
                 <Plot   // Violation type pie chart
@@ -159,7 +165,8 @@ export default class Plots extends Component {
                       type: 'pie'
                     }
                     ]}
-                    layout={ {width: 360, height: 360, title: 'Violation Type Ratio'} }
+                    layout={ {width: 380, height: 380, title: 'Violation Type Ratio'} }
+
                 />
                 <Plot   // Violations per day bar graph
                     data={[
@@ -169,7 +176,8 @@ export default class Plots extends Component {
                       type: 'bar'
                     }
                     ]}
-                    layout={ {width: 360, height: 360, title: 'Violations Per Day', xaxis:{title:'Day'}, yaxis:{title:'Violations'}} }
+                    layout={ {width: 380, height: 380, title: 'Violations Per Day', xaxis:{title:'Day'}, yaxis:{title:'Violations'}} }
+
                     
                 />
             </div>
